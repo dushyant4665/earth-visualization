@@ -1,26 +1,21 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-// Production constants
 const EARTH_SEGMENTS = 128;
 const STAR_COUNT = 8000;
 const MAX_FPS = 60;
 const TARGET_FPS = 60;
 
-// Performance monitoring
 let frameCount = 0;
 let lastTime = performance.now();
 let fps = 60;
 
-// Create scene
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000011);
 
-// Camera setup - closer and cleaner view
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
 camera.position.set(0, 0.5, 4.5);
 
-// Production renderer with fallbacks
 const renderer = new THREE.WebGLRenderer({ 
   antialias: true,
   powerPreference: 'high-performance',
@@ -28,7 +23,6 @@ const renderer = new THREE.WebGLRenderer({
   preserveDrawingBuffer: false
 });
 
-// Fallback for older devices
 if (!renderer.capabilities.isWebGL2) {
   console.warn('WebGL2 not supported, falling back to WebGL1');
 }
@@ -37,7 +31,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
-// Use modern color space for newer Three.js versions
 if (THREE.SRGBColorSpace !== undefined) {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 } else {
@@ -45,7 +38,6 @@ if (THREE.SRGBColorSpace !== undefined) {
 }
 document.body.appendChild(renderer.domElement);
 
-// Controls with error handling
 let controls;
 try {
   controls = new OrbitControls(camera, renderer.domElement);
@@ -57,11 +49,9 @@ try {
   controls.autoRotateSpeed = 0.4;
 } catch (error) {
   console.error('Failed to initialize controls:', error);
-  // Fallback: basic camera movement
   controls = null;
 }
 
-// Create stars with performance optimization
 const starGeometry = new THREE.BufferGeometry();
 const starMaterial = new THREE.PointsMaterial({
   color: 0xffffff,
@@ -83,21 +73,18 @@ starGeometry.setAttribute('position', new THREE.BufferAttribute(starVertices, 3)
 const stars = new THREE.Points(starGeometry, starMaterial);
 scene.add(stars);
 
-// Lighting setup
 const ambientLight = new THREE.AmbientLight(0x404040, 0.1);
 scene.add(ambientLight);
 
-// Main sun light for realistic day-night effect
 const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
 sunLight.position.set(10, 5, 10);
 scene.add(sunLight);
 
-// Rim light for dark side illumination (subtle light)
 const rimLight = new THREE.DirectionalLight(0x87ceeb, 0.3);
 rimLight.position.set(-10, -5, -10);
 scene.add(rimLight);
 
-// Create Earth
+// Earth
 const earthGeometry = new THREE.SphereGeometry(1, EARTH_SEGMENTS, EARTH_SEGMENTS);
 const earthMaterial = new THREE.MeshPhongMaterial({
   shininess: 20,
@@ -117,13 +104,12 @@ const atmosphereMaterial = new THREE.MeshPhongMaterial({
 const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
 earth.add(atmosphere);
 
-// Texture loader with error handling
 const textureLoader = new THREE.TextureLoader();
 const loadTexture = (path) => {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
       reject(new Error(`Texture loading timeout: ${path}`));
-    }, 10000); // 10 second timeout
+    }, 10000);
 
     textureLoader.load(
       path,
@@ -142,7 +128,6 @@ const loadTexture = (path) => {
   });
 };
 
-// Load Earth textures with fallbacks
 async function loadEarthTextures() {
   try {
     const loadingElement = document.getElementById('loading');
@@ -157,7 +142,6 @@ async function loadEarthTextures() {
         loadTexture('./earth-clouds.png')
       ]);
 
-    // Apply textures
     earthMaterial.map = earthDayTexture;
     earthMaterial.emissiveMap = earthNightTexture;
     earthMaterial.emissive = new THREE.Color(0xffffff);
@@ -166,7 +150,6 @@ async function loadEarthTextures() {
     earthMaterial.normalScale = new THREE.Vector2(0.6, 0.6);
     earthMaterial.needsUpdate = true;
 
-    // Create clouds
     const cloudGeometry = new THREE.SphereGeometry(1.02, 128, 128);
     const cloudMaterial = new THREE.MeshPhongMaterial({
       map: cloudTexture,
@@ -177,7 +160,7 @@ async function loadEarthTextures() {
     const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
     earth.add(clouds);
 
-    // Hide loading
+
     if (loadingElement) {
       loadingElement.style.display = 'none';
     }
@@ -199,7 +182,6 @@ async function loadEarthTextures() {
   }
 }
 
-// Performance-optimized resize handler
 let resizeTimeout;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimeout);
@@ -210,7 +192,6 @@ window.addEventListener('resize', () => {
   }, 100);
 });
 
-// Production animation loop with FPS control
 let lastFrameTime = 0;
 function animate(currentTime) {
   requestAnimationFrame(animate);
@@ -221,26 +202,20 @@ function animate(currentTime) {
   
   lastFrameTime = currentTime;
 
-  // Update controls
   if (controls) {
     controls.update();
   }
 
-  // Earth rotation - faster but maintaining aura feel
-  // Increased speed while keeping smooth, elegant movement
-  earth.rotation.y += 0.00015 * (deltaTime / 16.67); // Faster but still elegant
+  earth.rotation.y += 0.00015 * (deltaTime / 16.67); 
 
-  // Rotate stars - slightly faster to match Earth
   stars.rotation.y += 0.000008 * (deltaTime / 16.67);
 
-  // Performance monitoring
   frameCount++;
   if (currentTime - lastTime >= 1000) {
     fps = frameCount;
     frameCount = 0;
     lastTime = currentTime;
     
-    // Log performance in development
     if (import.meta.env?.DEV) {
       console.log(`FPS: ${fps}`);
     }
@@ -249,7 +224,6 @@ function animate(currentTime) {
   renderer.render(scene, camera);
 }
 
-// Initialize with error handling
 async function init() {
   try {
     await loadEarthTextures();
@@ -271,7 +245,6 @@ async function init() {
   }
 }
 
-// Start when ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
