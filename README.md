@@ -1,63 +1,41 @@
-# Earth Visualization
+# 🌍 Interactive 3D Earth — Powered by Three.js
 
-A real-time 3D Earth visualization built with Three.js and Vite. This project creates an interactive, photorealistic model of Earth with dynamic lighting, clouds, and atmospheric effects.
+A real-time, interactive Earth rendered in 3D using Three.js.  
+Features rotating clouds, atmospheric glow, and animated arcs connecting global points.  
+Built for clarity, performance, and immersive experience.
 
-## Features
+---
 
--  High-resolution Earth textures (8K)
--  Dynamic cloud layer with transparency
--  Day/night cycle with city lights
--  Smooth camera controls
--  Realistic atmospheric effects
--  Responsive design
+## 🖼 Preview
 
-## Quick Start
+![3D Earth Screenshot](./assets/preview.png)
 
-1. **Install Dependencies**
-   ```bash
-   npm install
-   ```
+---
 
-2. **Run Development Server**
-   ```bash
-   npm run dev
-   ```
-   Open http://localhost:3000 in your browser
+## 🧠 Why This Exists
 
-3. **Build for Production**
-   ```bash
-   npm run build
-   ```
+To explore the intersection of **design**, **data**, and **WebGL**.  
+A minimalist yet powerful way to visualize our planet in motion.
+
+---
+
+## ⚙️ Tech Stack
+
+- 🌐 **Three.js** — 3D engine
+- 🌫️ **Custom shaders** — for glow and atmosphere
+- 🌀 **Real-time animation** — clouds & rotation
+- 🛰️ **Animated arcs** — dynamic connections between global coordinates
+
+---
+
+## 🧭 Features
+
+- Interactive, zoomable globe  
+- Smooth Earth rotation with cloud layers  
+- Atmospheric glow using shaders  
+- Custom global arc animations (from point A to B)  
+- Designed for performance and visual impact
+
+---
 
 
-## Project Structure
-
-```
-├── public/
-│   └── assets/
-│       └── earth/          # Earth textures
-├── src/
-│   ├── core/              # Core utilities
-│   ├── entities/          # 3D objects
-│   └── main.js           # Entry point
-├── vite.config.js        # Build config
-└── package.json
-```
-
-## Development
-
-- **Code Style**: ESLint + Prettier
-- **Build Tool**: Vite
-- **3D Engine**: Three.js
-- **Testing**: Vitest
-
-## Deployment
-
-The project is configured for deployment on Vercel. Run:
-```bash
-vercel --prod
-```
-
-## License
-
-MIT License - feel free to use this project for learning or commercial purposes.

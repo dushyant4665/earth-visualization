@@ -1,36 +1,23 @@
 {
-  "name": "earth-visualization",
-  "version": "1.0.0",
-  "description": "Interactive 3D Earth visualization with realistic effects",
+  "name": "globe",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node build.js",
-    "preview": "vite preview",
-    "vercel-build": "npm run build",
-    "clean": "rimraf dist",
-    "prebuild": "npm run clean",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "format": "prettier --write ."
-
-  },
-  "dependencies": {
-    "three": "^0.160.0"
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@vitejs/plugin-legacy": "^6.1.1",
-    "eslint": "^9.27.0",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-prettier": "^5.4.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.0.0",
-    "prettier": "^3.5.3",
-    "rimraf": "^5.0.10",
-    "terser": "^5.39.2",
-    "vite": "^6.3.5",
-    "vitest": "^3.1.4"
+    "@types/three": "^0.175.0",
+    "three": "^0.175.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0"
   },
-  "engines": {
-    "node": ">=18.0.0"
+  "dependencies": {
+    "@react-three/drei": "^10.0.6",
+    "@react-three/fiber": "^9.1.2",
+    "gsap": "^3.12.7",
+    "three-geojson-geometry": "^2.1.1"
   }
 }
