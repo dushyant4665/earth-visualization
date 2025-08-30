@@ -1,41 +1,76 @@
-# 🌍 Interactive 3D Earth — Powered by Three.js
+# 3D Earth Visualization
 
-A real-time, interactive Earth rendered in 3D using Three.js.  
-Features rotating clouds, atmospheric glow, and animated arcs connecting global points.  
-Built for clarity, performance, and immersive experience.
+This is a simple 3D Earth website I made. It shows a rotating Earth with real textures and lighting.
 
----
+## What it does
 
-## 🖼 Preview
+- Shows a 3D Earth that rotates slowly
+- Has day and night textures
+- Stars in the background
+- Simple controls to move around
+- Background music plays automatically
 
-![3D Earth Screenshot](./assets/preview.png)
+## How to run
 
----
+1. Download the files
+2. Open terminal in the folder
+3. Run `npm install`
+4. Run `npm run dev` for development
+5. Run `npm run build` for production
+6. Run `npm run preview` to see the built version
 
-## 🧠 Why This Exists
+## What I used
 
-To explore the intersection of **design**, **data**, and **WebGL**.  
-A minimalist yet powerful way to visualize our planet in motion.
+- Three.js for 3D graphics
+- Vite for building
+- GSAP for animations
+- HTML and CSS for the loading screen
 
----
+## Project structure
 
-## ⚙️ Tech Stack
+```
+globe1/
+├── src/
+│   └── main.js          (3D Earth code)
+├── public/
+│   ├── earth-day.jpg     (Earth day texture)
+│   ├── earth-night.jpg   (Earth night texture)
+│   └── vision-slowed.mp3 (Background music)
+├── index.html            (Main page)
+├── package.json          (Dependencies)
+└── vite.config.ts        (Build settings)
+```
 
-- 🌐 **Three.js** — 3D engine
-- 🌫️ **Custom shaders** — for glow and atmosphere
-- 🌀 **Real-time animation** — clouds & rotation
-- 🛰️ **Animated arcs** — dynamic connections between global coordinates
+## Features
 
----
+- Realistic Earth textures
+- Smooth rotation
+- Interactive camera controls
+- Performance optimized
+- Error handling
+- Loading screen
 
-## 🧭 Features
+## How it works
 
-- Interactive, zoomable globe  
-- Smooth Earth rotation with cloud layers  
-- Atmospheric glow using shaders  
-- Custom global arc animations (from point A to B)  
-- Designed for performance and visual impact
+The main code is in `src/main.js`. It creates a 3D scene with:
+- A sphere for Earth
+- Textures for day and night
+- Lighting for realism
+- Stars in the background
+- Camera controls for movement
 
----
+The Earth rotates continuously and you can zoom in/out and move around with your mouse.
+
+## Building for production
+
+Run `npm run build` to create the production files in the `dist` folder. This makes the website faster and smaller.
+
+## Notes
+
+- Make sure you have the music file `vision-slowed.mp3` in the public folder
+- The website needs WebGL support in your browser
+- Works best on modern browsers
+
+That's it. Simple 3D Earth website.
 
 

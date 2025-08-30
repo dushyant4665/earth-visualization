@@ -1,23 +1,25 @@
 {
   "name": "globe",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "vite preview --port 4173",
+    "lint": "eslint src --ext .js",
+    "clean": "rimraf dist"
   },
   "devDependencies": {
     "@types/three": "^0.175.0",
-    "three": "^0.175.0",
     "typescript": "~5.7.2",
     "vite": "^6.2.0"
   },
   "dependencies": {
-    "@react-three/drei": "^10.0.6",
-    "@react-three/fiber": "^9.1.2",
-    "gsap": "^3.12.7",
-    "three-geojson-geometry": "^2.1.1"
+    "three": "^0.175.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }

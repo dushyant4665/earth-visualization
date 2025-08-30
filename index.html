@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive 3D Earth visualization with realistic lighting and textures">
+    <meta name="keywords" content="3D Earth, visualization, Three.js, interactive globe">
+    <meta name="author" content="Earth Visualization">
+    <meta name="theme-color" content="#000011">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/public/earth-day.jpg" as="image">
+    <link rel="preload" href="/public/earth-night.jpg" as="image">
+    
+    <title>3D Earth Visualization</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000011;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Loading Screen - Simple but Impressive */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+        }
+        
+        /* Powerful loading text */
+        .loading-text {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 0.8em;
+            text-transform: uppercase;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Single powerful progress bar */
+        .loading-progress {
+            width: 400px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: #ffffff;
+            border-radius: 4px;
+            width: 0%;
+            position: relative;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Single powerful line */
+        .loading-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            transform: translateY(-50%);
+            animation: lineMove 2s ease-in-out infinite;
+        }
+        
+        @keyframes lineMove {
+            0%, 100% { 
+                transform: translateX(-100%) translateY(-50%);
+                opacity: 0.3;
+            }
+            50% { 
+                transform: translateX(0%) translateY(-50%);
+                opacity: 1;
+            }
+        }
+        
+        /* Four corner brackets - minimal but powerful */
+        .corner {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .corner-top-left {
+            top: 30px;
+            left: 30px;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .corner-top-right {
+            top: 30px;
+            right: 30px;
+            border-left: none;
+            border-bottom: none;
+        }
+        
+        .corner-bottom-left {
+            bottom: 30px;
+            left: 30px;
+            border-right: none;
+            border-top: none;
+        }
+        
+        .corner-bottom-right {
+            bottom: 30px;
+            right: 30px;
+            border-left: none;
+            border-top: none;
+        }
+        
+        /* Remove old elements */
+        .loading-grid, .loading-container, #loading-earth, .orbital-rings, .particle, .data-points, .loading-dots {
+            display: none;
+        }
+        
+        /* Performance warning */
+        .performance-warning {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 193, 7, 0.9);
+            color: #000;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 1001;
+            display: none;
+        }
+        
+        /* Hidden elements */
+        #loading, #error-boundary {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music (Hidden) -->
+    <audio id="background-music" loop preload="auto">
+        <source src="./vision-slowed.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <!-- Amazing Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-text">LOADING</div>
+        <div class="loading-progress">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="loading-line"></div>
+        <div class="corner corner-top-left"></div>
+        <div class="corner corner-top-right"></div>
+        <div class="corner corner-bottom-left"></div>
+        <div class="corner corner-bottom-right"></div>
+    </div>
+    
+    <div id="loading">
+        <div class="spinner"></div>
+        Loading Earth visualization...
+    </div>
+    
+    <div class="performance-warning" id="perf-warning">
+        ⚠️ Low performance detected
+    </div>
+    
+    <!-- Error boundary -->
+    <div id="error-boundary" style="display: none;">
+        <div style="text-align: center; color: white; padding: 50px;">
+            <h2>🚫 Something went wrong</h2>
+            <p>Please refresh the page or check your browser supports WebGL.</p>
+            <button onclick="location.reload()" style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">
+                Reload Page
+            </button>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        // Global error handler
+        window.addEventListener('error', function(e) {
+            console.error('Global error:', e.error);
+            document.getElementById('error-boundary').style.display = 'block';
+            document.getElementById('loading-screen').style.display = 'none';
+        });
+        
+        // Performance monitoring
+        let lowFpsCount = 0;
+        function checkPerformance(fps) {
+            if (fps < 30 && lowFpsCount < 3) {
+                lowFpsCount++;
+                if (lowFpsCount >= 3) {
+                    document.getElementById('perf-warning').style.display = 'block';
+                }
+            }
+        }
+        
+        // Expose performance check globally
+        window.checkPerformance = checkPerformance;
+        
+        // Simple particle creation - removed for clean UI
+        
+        // Amazing loading animation with GSAP
+        function startLoadingAnimation() {
+            const tl = gsap.timeline();
+            
+            // Initial animations
+            tl.from('.loading-text', { 
+                duration: 1.5, 
+                y: -100, 
+                opacity: 0, 
+                ease: "back.out(1.7)" 
+            })
+            .from('.loading-progress', { 
+                duration: 1, 
+                width: 0, 
+                opacity: 0, 
+                ease: "power2.out" 
+            }, "-=0.5")
+            .from('.loading-line', { 
+                duration: 1, 
+                width: 0, 
+                opacity: 0, 
+                ease: "power2.out" 
+            }, "-=0.5");
+            
+                    // Progress bar animation
+        gsap.to('#progress-bar', {
+            width: '100%',
+            duration: 3,
+            ease: "power2.inOut"
+        });
+        }
+        
+        // Hidden music auto-play functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, setting up music...');
+            
+            const audio = document.getElementById('background-music');
+            if (!audio) {
+                console.error('❌ Audio element not found!');
+                return;
+            }
+            
+            console.log('✅ Audio element found:', audio);
+            console.log('Audio source:', audio.currentSrc);
+            console.log('Audio ready state:', audio.readyState);
+            
+            // Wait for audio to be ready
+            audio.addEventListener('loadstart', () => {
+                console.log('🎵 Audio loading started');
+            });
+            
+            audio.addEventListener('canplay', () => {
+                console.log('🎵 Audio can play now');
+                startMusic();
+            });
+            
+            audio.addEventListener('error', (e) => {
+                console.error('❌ Audio error:', e);
+                console.error('Audio error details:', audio.error);
+            });
+            
+            // Auto-play music when page loads (hidden)
+            const startMusic = () => {
+                console.log('🎵 Attempting to start music...');
+                audio.volume = 0.5;
+                console.log('🎵 Volume set to:', audio.volume);
+                
+                // Try to play
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('🎵 Music started successfully!');
+                        console.log('🎵 Music duration:', audio.duration);
+                        console.log('🎵 Music current time:', audio.currentTime);
+                    }).catch(err => {
+                        console.log('⚠️ Auto-play blocked by browser:', err);
+                        // If auto-play blocked, start on first user interaction
+                        document.addEventListener('click', () => {
+                            console.log('👆 User clicked, starting music...');
+                            audio.play().then(() => {
+                                console.log('🎵 Music started on user interaction!');
+                            }).catch(e => {
+                                console.error('❌ Failed to start music on click:', e);
+                            });
+                        }, { once: true });
+                    });
+                }
+            };
+            
+            // Add more event listeners for debugging
+            audio.addEventListener('play', () => console.log('🎵 Music playing'));
+            audio.addEventListener('pause', () => console.log('⏸️ Music paused'));
+            audio.addEventListener('ended', () => console.log('🔚 Music ended'));
+            audio.addEventListener('loadeddata', () => console.log('📊 Audio data loaded'));
+            audio.addEventListener('canplaythrough', () => console.log('🎯 Audio can play through'));
+            
+            // If audio is already ready, start music
+            if (audio.readyState >= 2) {
+                console.log('🎵 Audio already ready, starting music...');
+                startMusic();
+            }
+        });
+        
+        // Initialize loading animation
+        document.addEventListener('DOMContentLoaded', function() {
+            startLoadingAnimation();
+            
+            // Hide loading screen after 4 seconds (when main app is ready)
+            setTimeout(() => {
+                gsap.to('#loading-screen', {
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        document.getElementById('loading-screen').style.display = 'none';
+                    }
+                });
+            }, 4000);
+        });
+    </script>
+    
+    <script type="module" src="/src/main.js"></script>
+    
+    <!-- Fallback for no JavaScript -->
+    <noscript>
+        <div style="text-align: center; color: white; padding: 50px;">
+            <h2>JavaScript Required</h2>
+            <p>This 3D Earth visualization requires JavaScript to run.</p>
+            <p>Please enable JavaScript in your browser and refresh the page.</p>
+        </div>
+    </noscript>
+</body>
+</html>
