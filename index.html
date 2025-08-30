@@ -48,7 +48,7 @@
             overflow: hidden;
         }
         
-        /* Powerful loading text */
+        /* Simple loading text */
         .loading-text {
             font-size: 4rem;
             font-weight: 900;
@@ -61,7 +61,7 @@
             text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
         }
         
-        /* Single powerful progress bar */
+        /* Simple progress bar */
         .loading-progress {
             width: 400px;
             height: 8px;
@@ -82,7 +82,7 @@
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
         }
         
-        /* Single powerful line */
+        /* Simple line animation */
         .loading-line {
             position: absolute;
             top: 50%;
@@ -141,11 +141,6 @@
             border-top: none;
         }
         
-        /* Remove old elements */
-        .loading-grid, .loading-container, #loading-earth, .orbital-rings, .particle, .data-points, .loading-dots {
-            display: none;
-        }
-        
         /* Performance warning */
         .performance-warning {
             position: fixed;
@@ -164,9 +159,224 @@
         #loading, #error-boundary {
             display: none;
         }
+        
+        /* Responsive Design - Works on ALL devices */
+        @media (max-width: 768px) {
+            /* Mobile devices */
+            .loading-text {
+                font-size: 2.5rem;
+                letter-spacing: 0.4em;
+                margin-bottom: 2rem;
+            }
+            
+            .loading-progress {
+                width: 280px;
+                height: 6px;
+            }
+            
+            .corner {
+                width: 40px;
+                height: 40px;
+                border-width: 2px;
+            }
+            
+            .corner-top-left, .corner-top-right {
+                top: 15px;
+            }
+            
+            .corner-bottom-left, .corner-bottom-right {
+                bottom: 15px;
+            }
+            
+            .corner-top-left, .corner-bottom-left {
+                left: 15px;
+            }
+            
+            .corner-top-right, .corner-bottom-right {
+                right: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* Small mobile devices */
+            .loading-text {
+                font-size: 2rem;
+                letter-spacing: 0.3em;
+                margin-bottom: 1.5rem;
+            }
+            
+            .loading-progress {
+                width: 240px;
+                height: 5px;
+            }
+            
+            .corner {
+                width: 30px;
+                height: 30px;
+                border-width: 1.5px;
+            }
+            
+            .corner-top-left, .corner-top-right {
+                top: 10px;
+            }
+            
+            .corner-bottom-left, .corner-bottom-right {
+                bottom: 10px;
+            }
+            
+            .corner-top-left, .corner-bottom-left {
+                left: 10px;
+            }
+            
+            .corner-top-right, .corner-bottom-right {
+                right: 10px;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            /* Very small devices */
+            .loading-text {
+                font-size: 1.5rem;
+                letter-spacing: 0.2em;
+            }
+            
+            .loading-progress {
+                width: 200px;
+                height: 4px;
+            }
+        }
+        
+        /* Tablet devices */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .loading-text {
+                font-size: 3.5rem;
+                letter-spacing: 0.6em;
+            }
+            
+            .loading-progress {
+                width: 350px;
+                height: 7px;
+            }
+        }
+        
+        /* Large screens */
+        @media (min-width: 1025px) {
+            .loading-text {
+                font-size: 4.5rem;
+                letter-spacing: 1em;
+            }
+            
+            .loading-progress {
+                width: 450px;
+                height: 9px;
+            }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .loading-progress {
+                height: 8px; /* Easier to see on touch */
+            }
+        }
+        
+        /* High DPI displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .corner {
+                border-width: 1px; /* Thinner borders for sharp displays */
+            }
+        }
+        
+        /* Landscape mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .loading-text {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+            
+            .loading-progress {
+                width: 300px;
+                margin-bottom: 1rem;
+            }
+        }
+        
+        /* Source code link and credits */
+        .source-link {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1002;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 8px 15px;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .source-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .credits {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1002;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            font-weight: 400;
+            font-style: italic;
+        }
+        
+        /* Responsive adjustments for source link and credits */
+        @media (max-width: 768px) {
+            .source-link {
+                top: 15px;
+                right: 15px;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            .credits {
+                bottom: 15px;
+                left: 15px;
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .source-link {
+                top: 10px;
+                right: 10px;
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+            
+            .credits {
+                bottom: 10px;
+                left: 10px;
+                font-size: 11px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Source Code Link -->
+    <a href="https://github.com/dushyant4665/earth-visualization" target="_blank" class="source-link">
+        📁 View Source Code
+    </a>
+    
+    <!-- Credits -->
+    <div class="credits">
+        Build and Design by Dushyant
+    </div>
+    
     <!-- Background Music (Hidden) -->
     <audio id="background-music" loop preload="auto">
         <source src="./vision-slowed.mp3" type="audio/mpeg">
@@ -229,9 +439,7 @@
         // Expose performance check globally
         window.checkPerformance = checkPerformance;
         
-        // Simple particle creation - removed for clean UI
-        
-        // Amazing loading animation with GSAP
+        // Simple loading animation with GSAP
         function startLoadingAnimation() {
             const tl = gsap.timeline();
             
@@ -255,12 +463,12 @@
                 ease: "power2.out" 
             }, "-=0.5");
             
-                    // Progress bar animation
-        gsap.to('#progress-bar', {
-            width: '100%',
-            duration: 3,
-            ease: "power2.inOut"
-        });
+            // Progress bar animation
+            gsap.to('#progress-bar', {
+                width: '100%',
+                duration: 3,
+                ease: "power2.inOut"
+            });
         }
         
         // Hidden music auto-play functionality
