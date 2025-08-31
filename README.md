@@ -8,7 +8,6 @@ This is a simple 3D Earth website I made. It shows a rotating Earth with real te
 - Has day and night textures
 - Stars in the background
 - Simple controls to move around
-- Background music plays automatically
 
 ## How to run
 
