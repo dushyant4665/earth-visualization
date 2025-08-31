@@ -364,6 +364,161 @@
                 font-size: 11px;
             }
         }
+        
+        /* Simple intellectual button - appears when loading is done */
+        .enter-button {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1003;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 6px;
+            padding: 15px 30px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: visible;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .enter-button.show {
+            opacity: 1;
+        }
+        
+        .enter-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.7);
+            transform: translate(-50%, -50%) scale(1.02);
+        }
+        
+        .enter-button:active {
+            transform: translate(-50%, -50%) scale(0.98);
+        }
+        
+        /* Responsive button */
+        @media (max-width: 768px) {
+            .enter-button {
+                padding: 12px 25px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .enter-button {
+                padding: 10px 20px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Warning message during loading */
+        .warning-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1003;
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 30px 40px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+            max-width: 400px;
+        }
+        
+        .warning-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .warning-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+            letter-spacing: 0.1em;
+        }
+        
+        .warning-text {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .ok-button {
+            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+            border: none;
+            border-radius: 6px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #000000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .ok-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .ok-button:active {
+            transform: translateY(0);
+        }
+        
+        /* Responsive warning */
+        @media (max-width: 768px) {
+            .warning-message {
+                padding: 25px 30px;
+                margin: 0 20px;
+            }
+            
+            .warning-title {
+                font-size: 1.3rem;
+            }
+            
+            .warning-text {
+                font-size: 0.9rem;
+            }
+            
+            .ok-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .warning-message {
+                padding: 20px 25px;
+            }
+            
+            .warning-title {
+                font-size: 1.2rem;
+            }
+            
+            .warning-text {
+                font-size: 0.8rem;
+            }
+            
+            .ok-button {
+                padding: 8px 18px;
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -375,6 +530,18 @@
     <!-- Credits -->
     <div class="credits">
         Build and Design by Dushyant
+    </div>
+    
+    <!-- Warning Message -->
+    <div class="warning-message" id="warning-message">
+        <div class="warning-title">⚠️ System Warning</div>
+        <div class="warning-text">
+            This website contains WebGL graphics and 3D visualizations that may be intensive for your system. 
+            Please ensure your device supports WebGL for optimal performance.
+        </div>
+        <button class="ok-button" onclick="proceedToEarth()">
+            OK
+        </button>
     </div>
     
     <!-- Background Music (Hidden) -->
@@ -543,21 +710,81 @@
             }
         });
         
-        // Initialize loading animation
-        document.addEventListener('DOMContentLoaded', function() {
-            startLoadingAnimation();
-            
-            // Hide loading screen after 4 seconds (when main app is ready)
-            setTimeout(() => {
-                gsap.to('#loading-screen', {
+        // Show warning message during loading
+        function showWarning() {
+            const warning = document.getElementById('warning-message');
+            if (warning) {
+                console.log('⚠️ Showing system warning...');
+                warning.classList.add('show');
+                gsap.to(warning, {
+                    opacity: 1,
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            } else {
+                console.error('❌ Warning not found, hiding loading screen');
+                hideLoadingScreen();
+            }
+        }
+        
+        // Fallback function to hide loading screen
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                gsap.to(loadingScreen, {
                     opacity: 0,
                     duration: 1,
                     ease: "power2.inOut",
                     onComplete: () => {
-                        document.getElementById('loading-screen').style.display = 'none';
+                        loadingScreen.style.display = 'none';
                     }
                 });
-            }, 4000);
+            }
+        }
+        
+        // Proceed to Earth after user clicks OK
+        function proceedToEarth() {
+            const warning = document.getElementById('warning-message');
+            const loadingScreen = document.getElementById('loading-screen');
+            
+            console.log('🚀 User clicked OK, proceeding to Earth...');
+            
+            // Hide warning with animation
+            gsap.to(warning, {
+                opacity: 0,
+                scale: 0.9,
+                duration: 0.4,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    warning.style.display = 'none';
+                    
+                    // Hide loading screen
+                    gsap.to(loadingScreen, {
+                        opacity: 0,
+                        duration: 0.8,
+                        ease: "power2.inOut",
+                        onComplete: () => {
+                            loadingScreen.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Initialize loading animation
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Starting loading animation...');
+            startLoadingAnimation();
+            
+            // Show warning after 2 seconds during loading
+            setTimeout(() => {
+                showWarning();
+            }, 2000);
+            
+            // Fallback: hide loading screen after 8 seconds
+            setTimeout(() => {
+                hideLoadingScreen();
+            }, 8000);
         });
     </script>
     
